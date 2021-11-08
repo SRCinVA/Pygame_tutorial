@@ -10,14 +10,20 @@ pygame.display.set_caption("First Game!") # to give a title to the pop-up window
 WHITE = (255,255,255)
 
 FPS = 60 # defining the refreshing rate at 60 frames per second
+SPACESHIP_WIDTH, SPACESHIP_HEIGHT = 55,40
 
 def draw_window():
-    WIN.fill(WHITE)  # to fill the entire space
-    WIN.blit(YELLOW_SPACESHIP_IMAGE, (300,100))  # the image you want on the screeen and where it will go.
+    WIN.fill(WHITE)  # to fill the entire space ...
+    WIN.blit(YELLOW_SPACESHIP, (300,100))  # THEN draw the image you want on the screeen and where it will go.
     pygame.display.update() # we have to manually update the screen after making changes.
 
 YELLOW_SPACESHIP_IMAGE = pygame.image.load(os.path.join('Assets','spaceship_yellow.png'))
+# to resize the image (which you need to embed in a rotate command)
+YELLOW_SPACESHIP = pygame.transform.rotate(pygame.transform.scale(YELLOW_SPACESHIP_IMAGE,(SPACESHIP_WIDTH, SPACESHIP_HEIGHT)),(90))
+
 RED_SPACESHIP_IMAGE = pygame.image.load(os.path.join('Assets','spaceship_red.png'))
+RED_SPACESHIP = pygame.transform.scale(RED_SPACESHIP_IMAGE,(SPACESHIP_WIDTH, SPACESHIP_HEIGHT))
+
 
 # Creating your main loop
 def main():
