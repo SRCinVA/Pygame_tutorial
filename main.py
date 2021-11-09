@@ -14,7 +14,8 @@ SPACESHIP_WIDTH, SPACESHIP_HEIGHT = 55,40
 
 def draw_window():
     WIN.fill(WHITE)  # to fill the entire space ...
-    WIN.blit(YELLOW_SPACESHIP, (300,100))  # THEN draw the image you want on the screeen and where it will go.
+    WIN.blit(YELLOW_SPACESHIP, (yellow.x, yellow.y))  # we're feeding the values for the rectangles "red" and "yellow" below with coordinates
+    WIN.blit(RED_SPACESHIP, (red.x, red.y))
     pygame.display.update() # we have to manually update the screen after making changes.
 
 YELLOW_SPACESHIP_IMAGE = pygame.image.load(os.path.join('Assets','spaceship_yellow.png'))
@@ -22,11 +23,15 @@ YELLOW_SPACESHIP_IMAGE = pygame.image.load(os.path.join('Assets','spaceship_yell
 YELLOW_SPACESHIP = pygame.transform.rotate(pygame.transform.scale(YELLOW_SPACESHIP_IMAGE,(SPACESHIP_WIDTH, SPACESHIP_HEIGHT)),(90))
 
 RED_SPACESHIP_IMAGE = pygame.image.load(os.path.join('Assets','spaceship_red.png'))
-RED_SPACESHIP = pygame.transform.scale(RED_SPACESHIP_IMAGE,(SPACESHIP_WIDTH, SPACESHIP_HEIGHT))
+RED_SPACESHIP = pygame.transform.rotate(pygame.transform.scale(RED_SPACESHIP_IMAGE,(SPACESHIP_WIDTH, SPACESHIP_HEIGHT)),(270))
+
 
 
 # Creating your main loop
 def main():
+    # we'll pass these rectangles over to draw_window()
+    red = pygame.Rect(100,300, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)  # x, y, width, height
+    yellow = pygame.Rect(700, 300, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)
 
     clock = pygame.time.Clock() # creating a clock object in this loop
     run = True # this will be an infinite loop until we stop it
