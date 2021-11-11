@@ -12,7 +12,7 @@ WHITE = (255,255,255)
 FPS = 60 # defining the refreshing rate at 60 frames per second
 SPACESHIP_WIDTH, SPACESHIP_HEIGHT = 55,40
 
-def draw_window():
+def draw_window(red,yellow):
     WIN.fill(WHITE)  # to fill the entire space ...
     WIN.blit(YELLOW_SPACESHIP, (yellow.x, yellow.y))  # we're feeding the values for the rectangles "red" and "yellow" below with coordinates
     WIN.blit(RED_SPACESHIP, (red.x, red.y))
@@ -30,8 +30,8 @@ RED_SPACESHIP = pygame.transform.rotate(pygame.transform.scale(RED_SPACESHIP_IMA
 # Creating your main loop
 def main():
     # we'll pass these rectangles over to draw_window()
-    red = pygame.Rect(100,300, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)  # x, y, width, height
-    yellow = pygame.Rect(700, 300, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)
+    red = pygame.Rect(700,300, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)  # x, y, width, height
+    yellow = pygame.Rect(100, 300, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)
 
     clock = pygame.time.Clock() # creating a clock object in this loop
     run = True # this will be an infinite loop until we stop it
@@ -42,7 +42,8 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
         
-        draw_window() # good practice to separate out images from the logic of the game
+        red.x += 1
+        draw_window(red, yellow) # good practice to separate out images from the logic of the game
     
     pygame.quit()
 
