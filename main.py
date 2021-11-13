@@ -10,6 +10,7 @@ pygame.display.set_caption("First Game!") # to give a title to the pop-up window
 WHITE = (255,255,255)
 
 FPS = 60 # defining the refreshing rate at 60 frames per second
+VEL = 5 # a variable of velocity = 5
 SPACESHIP_WIDTH, SPACESHIP_HEIGHT = 55,40
 
 def draw_window(red,yellow):
@@ -42,7 +43,13 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
         
-        red.x += 1
+        keys_pressed = pygame.key.get_pressed() # with every loop it will tell us which keys are being pressed down.
+        if keys_pressed[pygame.K_a]:             # makes 'a' the left movement
+            yellow.x -= VEL # subract from our x value to move
+        if keys_pressed[pygame.K_d]:             # makes 'd' the right movement
+            yellow.x += VEL # adds to our x value to move
+        
+
         draw_window(red, yellow) # good practice to separate out images from the logic of the game
     
     pygame.quit()
