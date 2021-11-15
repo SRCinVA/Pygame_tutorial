@@ -26,7 +26,25 @@ YELLOW_SPACESHIP = pygame.transform.rotate(pygame.transform.scale(YELLOW_SPACESH
 RED_SPACESHIP_IMAGE = pygame.image.load(os.path.join('Assets','spaceship_red.png'))
 RED_SPACESHIP = pygame.transform.rotate(pygame.transform.scale(RED_SPACESHIP_IMAGE,(SPACESHIP_WIDTH, SPACESHIP_HEIGHT)),(270))
 
+def yellow_handle_movement(keys_pressed, yellow):
+    if keys_pressed[pygame.K_a]:             # makes 'a' the left movement
+        yellow.x -= VEL # subract from our x value to move
+    if keys_pressed[pygame.K_d]:             # makes 'd' the right movement
+        yellow.x += VEL # adds to our x value to move
+    if keys_pressed[pygame.K_w]:           
+        yellow.y -= VEL # UP
+    if keys_pressed[pygame.K_s]:             
+        yellow.y += VEL # DOWN
 
+def red_handle_movement(keys_pressed, red):
+    if keys_pressed[pygame.K_LEFT]:             # arrow keys need to be caps
+        red.x -= VEL # subract from our x value to move
+    if keys_pressed[pygame.K_RIGHT]:             # makes 'd' the right movement
+        red.x += VEL # adds to our x value to move
+    if keys_pressed[pygame.K_UP]:           
+        red.y -= VEL # UP  (remember, the 0 is in the top left corner)
+    if keys_pressed[pygame.K_DOWN]:             
+        red.y += VEL # DOWN
 
 # Creating your main loop
 def main():
@@ -44,11 +62,8 @@ def main():
                 run = False
         
         keys_pressed = pygame.key.get_pressed() # with every loop it will tell us which keys are being pressed down.
-        if keys_pressed[pygame.K_a]:             # makes 'a' the left movement
-            yellow.x -= VEL # subract from our x value to move
-        if keys_pressed[pygame.K_d]:             # makes 'd' the right movement
-            yellow.x += VEL # adds to our x value to move
-        
+        yellow_handle_movement(keys_pressed, yellow)
+        red_handle_movement(keys_pressed, red)
 
         draw_window(red, yellow) # good practice to separate out images from the logic of the game
     
