@@ -34,13 +34,17 @@ RED_SPACESHIP = pygame.transform.rotate(pygame.transform.scale(RED_SPACESHIP_IMA
 
 def yellow_handle_movement(keys_pressed, yellow):
     if keys_pressed[pygame.K_a] and yellow.x - VEL > 0:  # makes 'a' the left movement
-                                                        # unclear what role VEL has here
+                                                        # Velocity might be the number of pixels (or other standard unit) per FPS
         yellow.x -= VEL # subract from our x value to move
-    if keys_pressed[pygame.K_d]:             # makes 'd' the right movement
+    if keys_pressed[pygame.K_d] and yellow.x + VEL + yellow.width < BORDER.x: # makes 'd' the right movement
+                                                            # the 'and' statement won't let us move beyond the border's 'x' position.
+                                                            # the 'yellow.width' makes sure *none* of the spaceship can go over the right border.
         yellow.x += VEL # adds to our x value to move
-    if keys_pressed[pygame.K_w]:           
+    if keys_pressed[pygame.K_w] and yellow.y - VEL > 0:           
         yellow.y -= VEL # UP
-    if keys_pressed[pygame.K_s]:             
+    if keys_pressed[pygame.K_s] and yellow.y + VEL + yellow.height < HEIGHT - 10: # for some strange reason, we have to add more buffer; 
+                                                                                  # by subtracting 10, we reduced the total downward latitude the spaceship has            
+                                                            # the 'yellow.height' makes sure *none* of the spaceship can go over the bottom border.                                                                                                                       
         yellow.y += VEL # DOWN
 
 def red_handle_movement(keys_pressed, red):
