@@ -48,13 +48,13 @@ def yellow_handle_movement(keys_pressed, yellow):
         yellow.y += VEL # DOWN
 
 def red_handle_movement(keys_pressed, red):
-    if keys_pressed[pygame.K_LEFT]:             # arrow keys need to be caps
+    if keys_pressed[pygame.K_LEFT] and red.x + VEL - red.width > BORDER.x + BORDER.width - 30:             # arrow keys need to be caps
         red.x -= VEL # subract from our x value to move
-    if keys_pressed[pygame.K_RIGHT]:             # makes 'd' the right movement
+    if keys_pressed[pygame.K_RIGHT] and red.x + VEL + red.width - 5 < WIDTH:             # makes 'd' the right movement
         red.x += VEL # adds to our x value to move
-    if keys_pressed[pygame.K_UP]:           
+    if keys_pressed[pygame.K_UP] and red.y - VEL > 0:           
         red.y -= VEL # UP  (remember, the 0 is in the top left corner)
-    if keys_pressed[pygame.K_DOWN]:             
+    if keys_pressed[pygame.K_DOWN] and red.y + VEL + red.height + 10 < HEIGHT:             
         red.y += VEL # DOWN
 
 # Creating your main loop
