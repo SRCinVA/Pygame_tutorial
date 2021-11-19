@@ -15,7 +15,8 @@ BORDER = pygame.Rect(WIDTH/2 - 5, 0, 10, HEIGHT)# to create borders to prevetn s
                                                 # it's -5 because you want it to be half the width of the whole shape
 
 FPS = 60 # defining the refreshing rate at 60 frames per second
-VEL = 5 # a variable of velocity = 5
+VEL = 5 # a variable of velocity of the ships= 5
+BULLET_VEL = 7 # velocity for the projectiles
 SPACESHIP_WIDTH, SPACESHIP_HEIGHT = 55,40
 
 def draw_window(red,yellow):
@@ -63,6 +64,10 @@ def main():
     red = pygame.Rect(700, 300, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)  # x, y, width, height
     yellow = pygame.Rect(100, 300, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)
 
+    # to create projectiles in the game:
+    red_bullets = []
+    yellow_bullets = []
+
     clock = pygame.time.Clock() # creating a clock object in this loop
     run = True # this will be an infinite loop until we stop it
     
@@ -72,6 +77,16 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
         
+            # to create the bullets:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_v:
+                    bullet = pygame.Rect(yellow.x + yellow.width, yellow.y + yellow.height/2)  # so that the bullet is fired from the ship (height/2 puts it in the middle)
+                    yellow_bullets.append()            
+
+                if event.key == pygame.K_m:
+
+
+
         keys_pressed = pygame.key.get_pressed() # with every loop it will tell us which keys are being pressed down.
         yellow_handle_movement(keys_pressed, yellow)
         red_handle_movement(keys_pressed, red)
