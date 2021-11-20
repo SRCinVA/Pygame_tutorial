@@ -17,6 +17,7 @@ BORDER = pygame.Rect(WIDTH/2 - 5, 0, 10, HEIGHT)# to create borders to prevetn s
 FPS = 60 # defining the refreshing rate at 60 frames per second
 VEL = 5 # a variable of velocity of the ships= 5
 BULLET_VEL = 7 # velocity for the projectiles
+MAX_BULLETS = 50
 SPACESHIP_WIDTH, SPACESHIP_HEIGHT = 55,40
 
 def draw_window(red,yellow):
@@ -58,6 +59,17 @@ def red_handle_movement(keys_pressed, red):
     if keys_pressed[pygame.K_DOWN] and red.y + VEL + red.height + 10 < HEIGHT:             
         red.y += VEL # DOWN
 
+def handle_bullets(yellow_bullets, red_bullets, yellow, red):
+    for bullets in yellow_bullets:
+        bullet.x += BULLET_VEL  # to move yellow's bullets to the right 
+            if yellow.colliderect(bullet)  # this tool tells us if bullets have collided with the rectangle "yellow"
+            # you need to post an event that the collision happened
+                yellow_bullets.remove(bullet) #logically, if the collision happens, the bullet goes away
+    
+    for bullets in red_bullets:
+        bullet.x -= BULLET_VEL  # to move red's bullets to the right 
+
+
 # Creating your main loop
 def main():
     # we'll pass these rectangles over to draw_window()
@@ -79,17 +91,23 @@ def main():
         
             # to create the bullets:
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_v:
-                    bullet = pygame.Rect(yellow.x + yellow.width, yellow.y + yellow.height/2)  # so that the bullet is fired from the ship (height/2 puts it in the middle)
-                    yellow_bullets.append()            
+                if event.key == pygame.K_v and len(yellow_bullets) < MAX_BULLETS:
+                    bullet = pygame.Rect(yellow.x + yellow.width, yellow.y + yellow.height/2 - 2, 10, 5)  # so that the bullet is fired from the ship (height/2 puts it in the middle)
+                    yellow_bullets.append(bullet)    # the 10 and 5 are the height and width of the bullets
 
-                if event.key == pygame.K_m:
+                if event.key == pygame.K_m and len(red_bullets) < MAX_BULLETS:
+                    bullet = pygame.Rect(red.x, red.y + red.height/2 - 2, 10, 5)  # we don't need to add the width like for yellow, becuase red is firing to the left
+                    red_bullets.append(bullet)  
 
-
-
+        print (red_bullets, yellow_bullets)
         keys_pressed = pygame.key.get_pressed() # with every loop it will tell us which keys are being pressed down.
         yellow_handle_movement(keys_pressed, yellow)
         red_handle_movement(keys_pressed, red)
+        
+        # another function for bullets
+        handle_bullets(yellow_bullets, red_bullets, yellow, red)
+
+        
         draw_window(red, yellow) # good practice to separate out images from the logic of the game
     
     pygame.quit()
