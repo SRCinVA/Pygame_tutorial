@@ -19,7 +19,6 @@ BORDER = pygame.Rect(WIDTH//2 - 5, 0, 10, HEIGHT)# to create borders to prevetn 
 YELLOW_HIT = pygame.USEREVENT + 1
 RED_HIT = pygame.USEREVENT + 2 # this can't be '1" because otherwise they'd be the same event
 
-
 FPS = 60 # defining the refreshing rate at 60 frames per second
 VEL = 5 # a variable of velocity of the ships= 5
 BULLET_VEL = 7 # velocity for the projectiles
@@ -27,7 +26,7 @@ MAX_BULLETS = 50
 SPACESHIP_WIDTH, SPACESHIP_HEIGHT = 55,40
 
 def draw_window(red, yellow, red_bullets, yellow_bullets):
-    WIN.fill(WHITE)  # to fill the entire space ...
+    WIN.blit(SPACE, (0,0)) # to fill the entire canvas with 'space,' and we already know the dimensions ...
     pygame.draw.rect(WIN, BLACK, BORDER)  # drawing a rectangle, but not pygame.Rect()
     WIN.blit(YELLOW_SPACESHIP, (yellow.x, yellow.y))  # we're feeding the values for the rectangles "red" and "yellow" below with coordinates
     WIN.blit(RED_SPACESHIP, (red.x, red.y))
@@ -47,6 +46,9 @@ YELLOW_SPACESHIP = pygame.transform.rotate(pygame.transform.scale(YELLOW_SPACESH
 
 RED_SPACESHIP_IMAGE = pygame.image.load(os.path.join('Assets','spaceship_red.png'))
 RED_SPACESHIP = pygame.transform.rotate(pygame.transform.scale(RED_SPACESHIP_IMAGE,(SPACESHIP_WIDTH, SPACESHIP_HEIGHT)),(270))
+
+# to load (and resize) the prepared background:
+SPACE = pygame.transform.scale(pygame.image.load(os.path.join('Assets', 'space.png')), (WIDTH, HEIGHT))
 
 def yellow_handle_movement(keys_pressed, yellow):
     if keys_pressed[pygame.K_a] and yellow.x - VEL > 0:  # makes 'a' the left movement
@@ -83,14 +85,18 @@ def handle_bullets(yellow_bullets, red_bullets, yellow, red):
             # you need to post an event that the collision happened
             pygame.event.post(pygame.event.Event(RED_HIT))   # except for RED_HIT, what the ... ??
             yellow_bullets.remove(bullet) #logically, if the collision happens, the bullet goes away
-    
+        elif bullet.x > WIDTH: # if the bullets go off the screen, then disappear
+            yellow_bullets.remove(bullet) 
+
     for bullet in red_bullets:
         bullet.x -= BULLET_VEL  # to move red's bullets to the right 
         if yellow.colliderect(bullet):  # this tool tells us if bullets have collided with the rectangle "yellow"
             # you need to post an event that the collision happened
             pygame.event.post(pygame.event.Event(YELLOW_HIT))   # except for RED_HIT, what the ... ??
             red_bullets.remove(bullet) #logically, if the collision happens, the bullet goes away
-    
+        elif bullet.x < 0:  # going the opposite direction
+            red_bullets.remove(bullet)
+
 
 # Creating your main loop
 def main():
