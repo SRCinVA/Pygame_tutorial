@@ -1,5 +1,6 @@
 import pygame
 import os  # to help us define the path to these images
+pygame.font.init() # to draw fonts on the screen
 
 # need to make a surface
 # convention to use caps for your constant variables
@@ -15,7 +16,11 @@ YELLOW = (255, 255, 0)
 BORDER = pygame.Rect(WIDTH//2 - 5, 0, 10, HEIGHT)# to create borders to prevetn ships from colliding; two slashes for floating point division
                                                 # we wanted the x to be in the middle of the screen
                                                 # it's -5 because you want it to be half the width of the whole shape
-# for the "firings"
+
+# to draw fonts on the screen:
+HEALTH_FONT = pygame.font.SysFont('arial', 40)
+
+# for the "firings":
 YELLOW_HIT = pygame.USEREVENT + 1
 RED_HIT = pygame.USEREVENT + 2 # this can't be '1" because otherwise they'd be the same event
 
@@ -25,12 +30,18 @@ BULLET_VEL = 7 # velocity for the projectiles
 MAX_BULLETS = 50
 SPACESHIP_WIDTH, SPACESHIP_HEIGHT = 55,40
 
-def draw_window(red, yellow, red_bullets, yellow_bullets):
-    WIN.blit(SPACE, (0,0)) # to fill the entire canvas with 'space,' and we already know the dimensions ...
+def draw_window(red, yellow, red_bullets, yellow_bullets, red_health, yellow_health): # these are the entities drawn on the canvas
+    WIN.blit(SPACE, (0,0)) # to fill the canvas with 'space,' and we already know the dimensions ...
     pygame.draw.rect(WIN, BLACK, BORDER)  # drawing a rectangle, but not pygame.Rect()
+    
+    red_health_text = HEALTH_FONT.render("Health: " + str(red_health), 1, WHITE)
+    yellow_health_text = HEALTH_FONT.render("Health: " + str(yellow_health), 1, WHITE)
+
     WIN.blit(YELLOW_SPACESHIP, (yellow.x, yellow.y))  # we're feeding the values for the rectangles "red" and "yellow" below with coordinates
     WIN.blit(RED_SPACESHIP, (red.x, red.y))
-     
+
+
+
     for bullet in red_bullets:
         pygame.draw.rect(WIN, RED, bullet) # "drawing a red rectangle called "bullet" on the screen"
     
@@ -104,9 +115,13 @@ def main():
     red = pygame.Rect(700, 300, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)  # x, y, width, height
     yellow = pygame.Rect(100, 300, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)
 
-    # to create projectiles in the game:
+    # to create projectiles:
     red_bullets = []
     yellow_bullets = []
+
+    # to keep track of hits during game play:
+    red_health = 10
+    yellow_health = 10
 
     clock = pygame.time.Clock() # creating a clock object in this loop
     run = True # this will be an infinite loop until we stop it
@@ -127,7 +142,19 @@ def main():
                     bullet = pygame.Rect(red.x, red.y + red.height//2 - 2, 10, 5)  # we don't need to add the width like for yellow, becuase red is firing to the left
                     red_bullets.append(bullet)  
 
-        print (red_bullets, yellow_bullets)
+            if event.type == RED_HIT:  # we're just thsi particular event to the queue of other possible events
+                red_health -= 1
+            if event.type == YELLOW_HIT:
+                yellow_health -= 1
+        
+        winner_text = ""  # sets up a blank string
+        if red_health <= 0:
+            winner_text = "Yellow wins!!"
+        if yellow_health <= 0:
+            winner_text = "Red wins!"
+        if winner_text != "":
+            pass #someone won
+
         keys_pressed = pygame.key.get_pressed() # with every loop it will tell us which keys are being pressed down.
         yellow_handle_movement(keys_pressed, yellow)
         red_handle_movement(keys_pressed, red)
@@ -135,9 +162,10 @@ def main():
         # another function for bullets
         handle_bullets(yellow_bullets, red_bullets, yellow, red)
 
-        
-        draw_window(red, yellow, red_bullets, yellow_bullets) # good practice to separate out images from the logic of the game
-    
+        # good practice to separate out images from the logic of the game
+        draw_window(red, yellow, red_bullets, yellow_bullets, red_health, yellow_health) 
+
+
     pygame.quit()
 
 # this makes sure that this function is run ONLY if this file is run directly.
