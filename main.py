@@ -13,12 +13,13 @@ BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
 
-BORDER = pygame.Rect(WIDTH//2 - 5, 0, 10, HEIGHT)# to create borders to prevetn ships from colliding; two slashes for floating point division
+BORDER = pygame.Rect(WIDTH//2 - 5, 0, 10, HEIGHT)# to create borders to prevent ships from colliding; two slashes for floating point division
                                                 # we wanted the x to be in the middle of the screen
                                                 # it's -5 because you want it to be half the width of the whole shape
 
 # to draw fonts on the screen:
 HEALTH_FONT = pygame.font.SysFont('arial', 40)
+WINNER_FONT = pygame.font.SysFont('arial', 100)
 
 # for the "firings":
 YELLOW_HIT = pygame.USEREVENT + 1
@@ -36,11 +37,11 @@ def draw_window(red, yellow, red_bullets, yellow_bullets, red_health, yellow_hea
     
     red_health_text = HEALTH_FONT.render("Health: " + str(red_health), 1, WHITE)
     yellow_health_text = HEALTH_FONT.render("Health: " + str(yellow_health), 1, WHITE)
+    WIN.blit(red_health_text, (WIDTH - red_health_text.get_width() - 10, 10)) # will blit the health into the top left of the screen, with 10 pixels on the y as padding
+    WIN.blit(yellow_health_text, (10,10)) # easy: on the extreme left of the screen, we just need a buffer of 10 from the left and 10 from the top
 
     WIN.blit(YELLOW_SPACESHIP, (yellow.x, yellow.y))  # we're feeding the values for the rectangles "red" and "yellow" below with coordinates
-    WIN.blit(RED_SPACESHIP, (red.x, red.y))
-
-
+    WIN.blit(RED_SPACESHIP, (red.x, red.y)) 
 
     for bullet in red_bullets:
         pygame.draw.rect(WIN, RED, bullet) # "drawing a red rectangle called "bullet" on the screen"
@@ -108,6 +109,13 @@ def handle_bullets(yellow_bullets, red_bullets, yellow, red):
         elif bullet.x < 0:  # going the opposite direction
             red_bullets.remove(bullet)
 
+def draw_winner(text):
+    draw_text = WINNER_FONT.render(text, 1, WHITE)
+    # this will put the winner announcement directly in the middle of the screen (first the x, then the y)
+    WIN.blit(draw_text, (WIDTH//2 - draw_text.get_width()//2, HEIGHT//2 - draw_text.get_height()//2)) 
+    pygame.display.update()
+    pygame.time.delay(5000) # we show the tet for 5 seconds and then restart the game.
+
 
 # Creating your main loop
 def main():
@@ -153,7 +161,8 @@ def main():
         if yellow_health <= 0:
             winner_text = "Red wins!"
         if winner_text != "":
-            pass #someone won
+            draw_winner(winner_text)
+            break
 
         keys_pressed = pygame.key.get_pressed() # with every loop it will tell us which keys are being pressed down.
         yellow_handle_movement(keys_pressed, yellow)
