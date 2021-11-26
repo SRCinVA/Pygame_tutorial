@@ -1,6 +1,7 @@
 import pygame
 import os  # to help us define the path to these images
 pygame.font.init() # to draw fonts on the screen
+pygame.mixer.init()
 
 # need to make a surface
 # convention to use caps for your constant variables
@@ -16,6 +17,9 @@ YELLOW = (255, 255, 0)
 BORDER = pygame.Rect(WIDTH//2 - 5, 0, 10, HEIGHT)# to create borders to prevent ships from colliding; two slashes for floating point division
                                                 # we wanted the x to be in the middle of the screen
                                                 # it's -5 because you want it to be half the width of the whole shape
+
+BULLET_HIT_SOUND = pygame.mixer.Sound(os.path.join ('Assets', 'Grenade+1.mp3'))
+BULLET_FIRE_SOUND = pygame.mixer.Sound(os.path.join ('Assets', 'Gun+Silencer.mp3'))
 
 # to draw fonts on the screen:
 HEALTH_FONT = pygame.font.SysFont('arial', 40)
@@ -139,22 +143,27 @@ def main():
         for event in pygame.event.get(): # this a list of all events happening in pygame
             if event.type == pygame.QUIT:
                 run = False
-        
+                pygame.quit() # this turns off the game.
+
             # to create the bullets:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_v and len(yellow_bullets) < MAX_BULLETS:
                     bullet = pygame.Rect(yellow.x + yellow.width, yellow.y + yellow.height//2 - 2, 10, 5)  # so that the bullet is fired from the ship (height/2 puts it in the middle, two slashes for integer division)
                     yellow_bullets.append(bullet)    # the 10 and 5 are the height and width of the bullets
+                    BULLET_FIRE_SOUND.play()
 
                 if event.key == pygame.K_m and len(red_bullets) < MAX_BULLETS:
                     bullet = pygame.Rect(red.x, red.y + red.height//2 - 2, 10, 5)  # we don't need to add the width like for yellow, becuase red is firing to the left
                     red_bullets.append(bullet)  
+                    BULLET_FIRE_SOUND.play()
 
             if event.type == RED_HIT:  # we're just thsi particular event to the queue of other possible events
                 red_health -= 1
+                BULLET_HIT_SOUND.play()
             if event.type == YELLOW_HIT:
                 yellow_health -= 1
-        
+                BULLET_HIT_SOUND.play()
+
         winner_text = ""  # sets up a blank string
         if red_health <= 0:
             winner_text = "Yellow wins!!"
@@ -175,7 +184,7 @@ def main():
         draw_window(red, yellow, red_bullets, yellow_bullets, red_health, yellow_health) 
 
 
-    pygame.quit()
+    main()  # this restarts the game and re-defines the variables
 
 # this makes sure that this function is run ONLY if this file is run directly.
 # __name__ is just the name of the file
